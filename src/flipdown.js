@@ -113,7 +113,7 @@ class FlipDown {
    * @author PButcher
    **/
   _getTime() {
-    return new Date().getTime() / 1000;
+    return generateRandomDate(new Date(2019, 0, 1), new Date()).getTime() / 1000;
   }
 
   /**
@@ -151,14 +151,9 @@ class FlipDown {
    * @author PButcher
    **/
   _parseOptions(opt) {
-    let headings = ["Days", "Hours", "Minutes", "Seconds"];
-    if (opt.headings && opt.headings.length === 4) {
-      headings = opt.headings;
-    }
     return {
       // Theme
       theme: opt.hasOwnProperty("theme") ? opt.theme : "dark",
-      headings,
     };
   }
 
@@ -180,30 +175,13 @@ class FlipDown {
   _init() {
     this.initialised = true;
 
-    // Check whether countdown has ended and calculate how many digits the day counter needs
-    if (this._hasCountdownEnded()) {
-      this.daysremaining = 0;
-    } else {
-      this.daysremaining = Math.floor(
-        (this.epoch - this.now) / 86400
-      ).toString().length;
-    }
-    var dayRotorCount = this.daysremaining <= 2 ? 2 : this.daysremaining;
-
     // Create and store rotors
-    for (var i = 0; i < dayRotorCount + 6; i++) {
+    for (var i = 0; i < 6; i++) {
       this.rotors.push(this._createRotor(0));
     }
 
-    // Create day rotor group
-    var dayRotors = [];
-    for (var i = 0; i < dayRotorCount; i++) {
-      dayRotors.push(this.rotors[i]);
-    }
-    this.element.appendChild(this._createRotorGroup(dayRotors, 0));
-
     // Create other rotor groups
-    var count = dayRotorCount;
+    var count = 0;
     for (var i = 0; i < 3; i++) {
       var otherRotors = [];
       for (var j = 0; j < 2; j++) {
@@ -243,13 +221,6 @@ class FlipDown {
   _createRotorGroup(rotors, rotorIndex) {
     var rotorGroup = document.createElement("div");
     rotorGroup.className = "rotor-group";
-    var dayRotorGroupHeading = document.createElement("div");
-    dayRotorGroupHeading.className = "rotor-group-heading";
-    dayRotorGroupHeading.setAttribute(
-      "data-before",
-      this.opts.headings[rotorIndex]
-    );
-    rotorGroup.appendChild(dayRotorGroupHeading);
     appendChildren(rotorGroup, rotors);
     return rotorGroup;
   }
@@ -323,14 +294,12 @@ class FlipDown {
    **/
   _updateClockValues(init = false) {
     // Build clock value strings
-    this.clockStrings.d = pad(this.clockValues.d, 2);
     this.clockStrings.h = pad(this.clockValues.h, 2);
     this.clockStrings.m = pad(this.clockValues.m, 2);
     this.clockStrings.s = pad(this.clockValues.s, 2);
 
     // Concat clock value strings
     this.clockValuesAsString = (
-      this.clockStrings.d +
       this.clockStrings.h +
       this.clockStrings.m +
       this.clockStrings.s
@@ -411,4 +380,15 @@ function appendChildren(parent, children) {
   children.forEach((el) => {
     parent.appendChild(el);
   });
+}
+
+/**
+ * @name generateRandomDate
+ * @description Generate a random date
+ * @author willynogs
+ * @param {date} start - smallest date to generate
+ * @param {date} end - largest date to generate
+ **/
+function generateRandomDate(start, end) {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }

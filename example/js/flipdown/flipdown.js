@@ -1,6 +1,6 @@
 "use strict";
 
-function _typeof(obj) { if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
+function _typeof(obj) { "@babel/helpers - typeof"; if (typeof Symbol === "function" && typeof Symbol.iterator === "symbol") { _typeof = function _typeof(obj) { return typeof obj; }; } else { _typeof = function _typeof(obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; } return _typeof(obj); }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -69,7 +69,7 @@ var FlipDown = function () {
   }, {
     key: "_getTime",
     value: function _getTime() {
-      return new Date().getTime() / 1000;
+      return generateRandomDate(new Date(2019, 0, 1), new Date()).getTime() / 1000;
     }
   }, {
     key: "_hasCountdownEnded",
@@ -91,15 +91,8 @@ var FlipDown = function () {
   }, {
     key: "_parseOptions",
     value: function _parseOptions(opt) {
-      var headings = ["Days", "Hours", "Minutes", "Seconds"];
-
-      if (opt.headings && opt.headings.length === 4) {
-        headings = opt.headings;
-      }
-
       return {
-        theme: opt.hasOwnProperty("theme") ? opt.theme : "dark",
-        headings: headings
+        theme: opt.hasOwnProperty("theme") ? opt.theme : "dark"
       };
     }
   }, {
@@ -112,26 +105,11 @@ var FlipDown = function () {
     value: function _init() {
       this.initialised = true;
 
-      if (this._hasCountdownEnded()) {
-        this.daysremaining = 0;
-      } else {
-        this.daysremaining = Math.floor((this.epoch - this.now) / 86400).toString().length;
-      }
-
-      var dayRotorCount = this.daysremaining <= 2 ? 2 : this.daysremaining;
-
-      for (var i = 0; i < dayRotorCount + 6; i++) {
+      for (var i = 0; i < 6; i++) {
         this.rotors.push(this._createRotor(0));
       }
 
-      var dayRotors = [];
-
-      for (var i = 0; i < dayRotorCount; i++) {
-        dayRotors.push(this.rotors[i]);
-      }
-
-      this.element.appendChild(this._createRotorGroup(dayRotors, 0));
-      var count = dayRotorCount;
+      var count = 0;
 
       for (var i = 0; i < 3; i++) {
         var otherRotors = [];
@@ -160,10 +138,6 @@ var FlipDown = function () {
     value: function _createRotorGroup(rotors, rotorIndex) {
       var rotorGroup = document.createElement("div");
       rotorGroup.className = "rotor-group";
-      var dayRotorGroupHeading = document.createElement("div");
-      dayRotorGroupHeading.className = "rotor-group-heading";
-      dayRotorGroupHeading.setAttribute("data-before", this.opts.headings[rotorIndex]);
-      rotorGroup.appendChild(dayRotorGroupHeading);
       appendChildren(rotorGroup, rotors);
       return rotorGroup;
     }
@@ -213,11 +187,10 @@ var FlipDown = function () {
       var _this = this;
 
       var init = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-      this.clockStrings.d = pad(this.clockValues.d, 2);
       this.clockStrings.h = pad(this.clockValues.h, 2);
       this.clockStrings.m = pad(this.clockValues.m, 2);
       this.clockStrings.s = pad(this.clockValues.s, 2);
-      this.clockValuesAsString = (this.clockStrings.d + this.clockStrings.h + this.clockStrings.m + this.clockStrings.s).split("");
+      this.clockValuesAsString = (this.clockStrings.h + this.clockStrings.m + this.clockStrings.s).split("");
       this.rotorLeafFront.forEach(function (el, i) {
         el.textContent = _this.prevClockValuesAsString[i];
       });
@@ -274,4 +247,8 @@ function appendChildren(parent, children) {
   children.forEach(function (el) {
     parent.appendChild(el);
   });
+}
+
+function generateRandomDate(start, end) {
+  return new Date(start.getTime() + Math.random() * (end.getTime() - start.getTime()));
 }

@@ -70,7 +70,7 @@
 
 .flipdown {
   overflow: visible;
-  width: 510px;
+  width: 375px;
   height: 110px;
 }
 
@@ -103,11 +103,7 @@
   content: attr(data-before);
 }
 
-.flipdown .rotor-group:nth-child(4) .rotor-group-heading:before {
-  content: attr(data-before);
-}
-
-.flipdown .rotor-group:nth-child(n+2):nth-child(-n+3):before {
+.flipdown .rotor-group:nth-child(1):before {
   content: '';
   position: absolute;
   bottom: 20px;
@@ -117,7 +113,7 @@
   border-radius: 50%;
 }
 
-.flipdown .rotor-group:nth-child(n+2):nth-child(-n+3):after {
+.flipdown .rotor-group:nth-child(1):after {
   content: '';
   position: absolute;
   bottom: 50px;
@@ -213,7 +209,7 @@
 @media (max-width: 550px) {
 
   .flipdown {
-    width: 312px;
+    width: 228px;
     height: 70px;
   }
 
