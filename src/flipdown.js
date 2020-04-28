@@ -6,7 +6,7 @@
  * @param {string} el - DOM element to attach FlipDown to
  * @param {object} opt - Optional configuration settings
  **/
-class FlipDown {
+export default class FlipDown {
   constructor(uts, el = "flipdown", opt = {}) {
     // If uts is not specified
     if (typeof uts !== "number") {
